@@ -1,13 +1,15 @@
+import requests
+
 grid = [
-        [5,3,0,0,7,0,0,0,0],
-        [6,0,0,1,9,5,0,0,0],
-        [0,9,8,0,0,0,0,6,0],
-        [8,0,0,0,6,0,0,0,3],
-        [4,0,0,8,0,3,0,0,1],
-        [7,0,0,0,2,0,0,0,6],
-        [0,6,0,0,0,0,2,8,0],
-        [0,0,0,4,1,9,0,0,5],
-        [0,0,0,0,8,0,0,7,9]
+        [5,0,0,1,0,0,0,4,0],
+        [0,4,0,8,0,0,0,0,5],
+        [1,9,7,5,2,0,0,0,3],
+        [0,8,5,7,0,9,0,1,2],
+        [7,3,4,0,0,2,0,0,8],
+        [2,1,0,3,5,0,6,0,0],
+        [4,0,0,9,0,0,0,2,0],
+        [0,5,1,0,0,6,4,0,0],
+        [0,0,6,0,0,5,0,8,0]
     ]
 
 visitedPositions = []
@@ -47,20 +49,20 @@ def getSquare(currentPosition):
         row = 7
     if currentPosition[1] < 3 :
         column = 1
-    if currentPosition[1] >=3 and currentPosition[0] <6:
+    if currentPosition[1] >=3 and currentPosition[1] <6:
         column = 4
     if currentPosition[1] >=6:
         column = 7
     square = [
-        [grid[row-1][column -1], grid[row-1][column],grid[row-1][column+1]],
-        [grid[row][column -1], grid[row][column], grid[row][column+1]],
-        [grid[row+1][column -1], grid[row+1][column],grid[row+1][column+1]]
+        grid[row-1][column -1], grid[row-1][column],grid[row-1][column+1],
+        grid[row][column -1], grid[row][column], grid[row][column+1],
+        grid[row+1][column -1], grid[row+1][column],grid[row+1][column+1]
     ]
     return square
 
 def backtrack():
     newPosition =  visitedPositions.pop()
-    solve(newPosition)
+    solve(newPosition, True)
 
 def getNextPosition(currentPosition):
     if currentPosition[0]<8:
@@ -69,9 +71,9 @@ def getNextPosition(currentPosition):
         return (0,currentPosition[1]+1)
 
 
-def solve(currentPosition):
+def solve(currentPosition, backtracking = False):
     value = grid[currentPosition[0]][currentPosition[1]]
-    if value != 0:
+    if value != 0 and not backtracking:
         nextPosition = getNextPosition(currentPosition)
         solve(nextPosition)
     
@@ -90,23 +92,32 @@ def solve(currentPosition):
         grid[currentPosition[0]][currentPosition[1]]=value    
     visitedPositions.append(currentPosition)
     nextPosition = getNextPosition(currentPosition)
-    if nextPosition[0] >=9 and nextPosition[1]>=9:
-        return True
-    else:
-        print("------------------------------------------")
-        for row in grid:
-            print(row)
-        solve(nextPosition)
+    solve(nextPosition)
 
 def main():
+    response = requests.get("http://www.cs.utep.edu/cheon/ws/sudoku/new/[?size][&level]/")
+    print(response.status_code)
+
+    f=open("sudoku.txt","w+")
+    f.write("Puzzle:\n")
     for row in grid:
-        print(row)
+        for num in row:
+            f.write('%s' %num)
+        f.write('\n')
     
-    solve((0,0))
+    try:
+        solve((0,0))
+    except:
+        pass
+    finally:
+        f.write("\n")
+        f.write("Solution:\n")
+        for row in grid:
+            for num in row:
+                f.write('%s' %num)
+            f.write('\n')
 
-    for row in grid:
-       print(row)
-
+    f.close()
 if __name__ == "__main__":
     main()
 
