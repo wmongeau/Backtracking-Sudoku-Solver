@@ -95,8 +95,8 @@ def solve(currentPosition, backtracking = False):
     solve(nextPosition)
 
 def main():
-    response = requests.get("http://www.cs.utep.edu/cheon/ws/sudoku/new/[?size][&level]/")
-    print(response.status_code)
+   # response = requests.get("http://www.cs.utep.edu/cheon/ws/sudoku/new/[?size][&level]/")
+    #print(response.status_code)
 
     f=open("sudoku.txt","w+")
     f.write("Puzzle:\n")
@@ -120,4 +120,3 @@ def main():
     f.close()
 if __name__ == "__main__":
     main()
-
