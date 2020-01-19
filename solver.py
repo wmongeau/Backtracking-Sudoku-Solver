@@ -1,15 +1,35 @@
-import requests
+import tkinter as tk
+
+root = tk.Tk()
+
+canvas = tk.Canvas(root, height=650, width = 650)
+canvas.pack()
+
+frame = tk.Frame(root,bg='blue')
+frame.place(relx=0.1,rely=0.1,relwidth=0.8,relheight=0.8)
+
+label = tk.Label(root,text="Sudoku Solver")
+label.pack()
+
+entry=tk.Entry(frame)
+entry.pack()
+
+
+button = tk.Button(root, text = "Solve")
+button.pack()
+
+root.mainloop()
 
 grid = [
-        [5,0,0,1,0,0,0,4,0],
-        [0,4,0,8,0,0,0,0,5],
-        [1,9,7,5,2,0,0,0,3],
-        [0,8,5,7,0,9,0,1,2],
-        [7,3,4,0,0,2,0,0,8],
-        [2,1,0,3,5,0,6,0,0],
-        [4,0,0,9,0,0,0,2,0],
-        [0,5,1,0,0,6,4,0,0],
-        [0,0,6,0,0,5,0,8,0]
+        [0,7,0,9,3,8,0,1,0],
+        [0,8,0,0,0,0,0,5,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,6,0,0,0,0,0,9,0],
+        [0,0,0,0,7,0,0,0,0],
+        [0,9,0,3,2,5,0,7,0],
+        [9,0,2,0,5,0,6,0,7],
+        [0,0,0,4,0,7,0,0,0],
+        [0,0,4,0,0,0,5,0,0]
     ]
 
 visitedPositions = []
@@ -70,7 +90,6 @@ def getNextPosition(currentPosition):
     else:
         return (0,currentPosition[1]+1)
 
-
 def solve(currentPosition, backtracking = False):
     value = grid[currentPosition[0]][currentPosition[1]]
     if value != 0 and not backtracking:
@@ -94,29 +113,27 @@ def solve(currentPosition, backtracking = False):
     nextPosition = getNextPosition(currentPosition)
     solve(nextPosition)
 
-def main():
-   # response = requests.get("http://www.cs.utep.edu/cheon/ws/sudoku/new/[?size][&level]/")
-    #print(response.status_code)
+# def main():
 
-    f=open("sudoku.txt","w+")
-    f.write("Puzzle:\n")
-    for row in grid:
-        for num in row:
-            f.write('%s' %num)
-        f.write('\n')
+#     f=open("sudoku.txt","w+")
+#     f.write("Puzzle:\n")
+#     for row in grid:
+#         for num in row:
+#             f.write('%s' %num)
+#         f.write('\n')
     
-    try:
-        solve((0,0))
-    except:
-        pass
-    finally:
-        f.write("\n")
-        f.write("Solution:\n")
-        for row in grid:
-            for num in row:
-                f.write('%s' %num)
-            f.write('\n')
+#     try:
+#         solve((0,0))
+#     except:
+#         pass
+#     finally:
+#         f.write("\n")
+#         f.write("Solution:\n")
+#         for row in grid:
+#             for num in row:
+#                 f.write('%s' %num)
+#             f.write('\n')
 
-    f.close()
-if __name__ == "__main__":
-    main()
+#     f.close()
+# if __name__ == "__main__":
+#     main()
